@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objects as go
+import plotly.express as px
 import plotly.figure_factory as ff
 import plotly.io as pio
 pio.renderers.default='browser'
@@ -34,28 +35,65 @@ fig2.update_layout(
 #FacetPlot
 
 
-laying = train[train['Activity'] == 'LAYING']
-sitting = train[train['Activity'] == 'SITTING']
-standing = train[train['Activity'] == 'STANDING']
-walking = train[train['Activity'] == 'WALKING']
-walking_downstairs = train[train['Activity'] == 'WALKING_DOWNSTAIRS']
+laying = train[train['Activity'] == 'LAYING'].iloc[:986]
+sitting = train[train['Activity'] == 'SITTING'].iloc[:986]
+standing = train[train['Activity'] == 'STANDING'].iloc[:986]
+walking = train[train['Activity'] == 'WALKING'].iloc[:986]
+walking_downstairs = train[train['Activity'] == 'WALKING_DOWNSTAIRS'].iloc[:986]
 walking_upstairs = train[train['Activity'] == 'WALING_UPSTAIRS']
 
+fig3 = px.histogram(train, x='Subject', color="Activity", barmode='group')
+fig3.update_layout(
+    xaxis = dict(
+        tickmode = 'linear'
+    )
+)
 
-facetgrid = sns.FacetGrid(train, hue='Activity', size=6,aspect=2)
-facetgrid.map(sns.distplot,'tBodyAccMag-mean()', hist=False).add_legend()
-plt.annotate("Stationary Activities", xy=(-0.956,8), xytext=(-0.5, 14), size=20,
-            va='center', ha='left',
-            arrowprops=dict(arrowstyle="simple",connectionstyle="arc3,rad=0.1"))
 
-plt.annotate("Moving Activities", xy=(0,3), xytext=(0.2, 9), size=20,\
-            va='center', ha='left',\
-            arrowprops=dict(arrowstyle="simple",connectionstyle="arc3,rad=0.1"))
 
-x1 = walking_upstairs['tBodyAccMag-mean()'].to_numpy()
-fig = ff.create_distplot([sitting['tBodyAccMag-mean()']], ['sitting'], show_hist=False)
-fig = ff.create_distplot([walking['tBodyAccMag-mean()']], ['walking'], show_hist=False)
 
+# facetgrid = sns.FacetGrid(train, hue='Activity', size=6,aspect=2)
+# facetgrid.map(sns.distplot,'tBodyAccMag-mean()', hist=False).add_legend()
+# plt.annotate("Stationary Activities", xy=(-0.956,8), xytext=(-0.5, 14), size=20,
+#             va='center', ha='left',
+#             arrowprops=dict(arrowstyle="simple",connectionstyle="arc3,rad=0.1"))
+#
+# plt.annotate("Moving Activities", xy=(0,3), xytext=(0.2, 9), size=20,
+#             va='center', ha='left',
+#             arrowprops=dict(arrowstyle="simple",connectionstyle="arc3,rad=0.1"))
+
+hist_data = [laying['tBodyAccMag-mean()'], sitting['tBodyAccMag-mean()'], standing['tBodyAccMag-mean()'], walking['tBodyAccMag-mean()'],
+             walking_downstairs['tBodyAccMag-mean()']]
+group_labels = ['Laying', 'Sitting', 'Standing', 'Walking', 'Walking Downstairs']
+fig4 = ff.create_distplot(hist_data, group_labels, show_hist=False)
+fig4.add_annotation(x=-0.96, y=13,
+            text="Stationary Activity",
+            showarrow=False,
+            arrowhead=1, align='right')
+fig4.add_annotation(x=-0.1, y=4,
+            text="Moving Activity",
+            showarrow=True,
+            arrowhead=1)
+
+fig5 = px.box(train, x='Activity', y='tBodyAccMag-mean()', color='Activity')
+fig5.add_shape(type="line",
+    x0=-1, y0=-0.4, x1=6, y1=-0.4,
+    line=dict(
+        color="Grey",
+        width=1,
+        dash="dashdot",
+    ))
+
+fig6 = px.box(train, x='Activity', y='fBodyAccMag-mean()', color='Activity')
+
+
+sitting = train[train['Activity'] == 'SITTING'].iloc[:986]
+x = sitting['angle(X,gravityMean)']
+y = sitting['angle(Y,gravityMean)']
+z = [sitting['angle(Z,gravityMean)']]*200
+fig7 = go.Figure(data=[go.Surface(z=z, x=x, y=y)])
+fig7.update_layout(title='Gravity', autosize=True,
+                  margin=dict(l=65, r=50, b=65, t=90))
 # col = train.columns
 # x_train = train.iloc[:,:]
 # y_train = train.iloc[:,-1]
