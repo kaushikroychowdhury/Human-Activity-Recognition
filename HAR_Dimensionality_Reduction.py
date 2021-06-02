@@ -1,6 +1,10 @@
 ### Testing which advanced dimensionality reduction method is better of this data ###
 
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set()
 from sklearn.utils import shuffle
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
@@ -8,6 +12,7 @@ from sklearn.manifold import TSNE
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.preprocessing import StandardScaler
 import umap.umap_ as umap
+import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 pio.renderers.default='browser'
@@ -65,6 +70,18 @@ def plot_3d(component1, component2, component3):
 
 x = StandardScaler().fit_transform(x)
 
+pca = PCA().fit(x)
+exp_var_cumul = np.cumsum(pca.explained_variance_ratio_)
+fig1 = px.area(
+    x=range(1, exp_var_cumul.shape[0] + 1),
+    y=exp_var_cumul,
+    labels={"x": "# Components", "y": "Explained Variance"}
+)
+# plt.plot(np.cumsum(pca.explained_variance_ratio_))
+# plt.xlabel('number of components')
+# plt.ylabel('cumulative explained variance')           ## Matplotlib
+
+###################################################### PCA ##################   Visualization of data #################
 pca = PCA(n_components=3)
 principalComponents = pca.fit_transform(x)
 principal = pd.DataFrame(data = principalComponents
@@ -83,7 +100,7 @@ plot_2d(tsne[:, 0],tsne[:, 1])
 plot_3d(tsne[:, 0],tsne[:, 1],tsne[:, 2])
 
 # ################################################# UMAP #################################################################
-#
+
 reducer = umap.UMAP(random_state=42,n_components=3)
 embedding = reducer.fit_transform(x)
 
