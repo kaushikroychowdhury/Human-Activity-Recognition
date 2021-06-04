@@ -31,8 +31,33 @@ Accuracy for Original Test data after feature selection
 Score: 88.7%
 124 features
 
-
-
-
+UMAP training data
+89.60000000000001%      comp - 2
+91.4%                   comp -5
+91.3%                       10
+90.60000000000001%          3
+91.5%                       7
 
 ####################################################################################################################################
+
+Final Run Model Selection
+
+Score: 95.7% 	 Classifier: KNeighborsClassifier
+Score: 98.1% 	 Classifier: SVC
+Score: 94.1% 	 Classifier: DecisionTreeClassifier
+Score: 98.1% 	 Classifier: RandomForestClassifier
+Score: 72.7% 	 Classifier: GaussianNB
+Score: 98.4% 	 Classifier: RidgeClassifier
+Score: 98.9% 	 Classifier: LogisticRegression
+
+Accuracy for Train data before feature selection
+Score: 98.9%
+Accuracy for Original Test data before feature selection
+Score: 95.6%
+Accuracy for Train data after feature selection
+Score: 98.9%
+Accuracy for Original Test data after feature selection
+Score: 85.1%
+
+umap training   Score: 92.0%
+umap test       Score: 85.9%

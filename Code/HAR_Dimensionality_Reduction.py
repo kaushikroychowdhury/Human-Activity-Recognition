@@ -1,8 +1,8 @@
 ### Testing which advanced dimensionality reduction method is better of this data ###
-
+import time
 import pandas as pd
+from sklearn.model_selection import train_test_split
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set()
 from sklearn.utils import shuffle
@@ -24,8 +24,14 @@ train['code'] = LE.fit_transform(train['Activity'])
 # train = train.iloc[:200]
 x = train.drop(['subject', 'Activity'],axis=1)
 y = train['code']
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.20 ,random_state=42)
 
-
+test = pd.read_csv("Human Activity Recognition with Smartphone/test.csv")
+test = shuffle(test)
+LE = LabelEncoder()
+test['code'] = LE.fit_transform(test['Activity'])
+x = test.drop(['subject', 'Activity'],axis=1)
+y = test['code']
 
 def plot_2d(component1, component2):
     fig = go.Figure(data=go.Scatter(
@@ -77,6 +83,7 @@ fig1 = px.area(
     y=exp_var_cumul,
     labels={"x": "# Components", "y": "Explained Variance"}
 )
+# import matplotlib.pyplot as plt
 # plt.plot(np.cumsum(pca.explained_variance_ratio_))
 # plt.xlabel('number of components')
 # plt.ylabel('cumulative explained variance')           ## Matplotlib
@@ -91,7 +98,7 @@ plot_2d(principalComponents[:, 0],principalComponents[:, 1])
 plot_3d(principalComponents[:, 0],principalComponents[:, 1],principalComponents[:, 2])
 
 
-# ################################################### T-SNE ###############################################################
+# ################################################### T-SNE ############################################################
 pca_50 = PCA(n_components=50)
 pca_result_50 = pca_50.fit_transform(x)
 tsne = TSNE(random_state = 42, n_components=3,verbose=0, perplexity=40, n_iter=400).fit_transform(pca_result_50)
@@ -108,8 +115,20 @@ plot_2d(reducer.embedding_[:, 0],reducer.embedding_[:, 1])
 plot_3d(reducer.embedding_[:, 0],reducer.embedding_[:, 1],reducer.embedding_[:, 2])
 
 # ################################################ LDA ###################################################################
-#
-# X_LDA = LDA(n_components=3).fit_transform(x,y)
-# plot_2d(X_LDA[:, 0],X_LDA[:, 1])                          ## Not Working
-# plot_3d(X_LDA[:, 0],X_LDA[:, 1],X_LDA[:, 2])
+
+X_LDA = LDA(n_components=3).fit_transform(x,y)
+# plot_2d(X_LDA[:, 0],X_LDA[:, 1])                          ## Not Working because dimension of LDA is only 1
+# plot_3d(X_LDA[:, 0],X_LDA[:, 1],X_LDA[:, 2])              ## instead of 3 components, it returned only 1
+
+
+# As we can see UMAP outperforms other techniques for this Dataset ..
+# https://umap-learn.readthedocs.io/en/latest/supervised.html#using-labels-to-separate-classes-supervised-umap
+s = time.time()
+embedding = umap.UMAP(n_neighbors=20).fit_transform(x, y=y)
+e = time.time()
+print(f"time consumed: {round(e-s,3)}")
+plot_2d(embedding[:, 0],embedding[:, 1])
+
+
+
 

@@ -1,8 +1,9 @@
 from HAR_Feature_Selection import *
+import umap.umap_ as umap
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier, StackingClassifier, GradientBoostingClassifier
 from sklearn.utils import shuffle
+from sklearn.ensemble import RandomForestClassifier, StackingClassifier, GradientBoostingClassifier
 from sklearn.linear_model import RidgeClassifier
 from sklearn.svm import SVC
 from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score, roc_curve
@@ -11,7 +12,6 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
 import plotly.figure_factory as ff
-import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 pio.renderers.default='browser'
@@ -21,13 +21,13 @@ warnings.filterwarnings("ignore")
 
 ### Functions used ..
 
-def ConfusionMatrix_plot(cm, labels, tittle):
+def ConfusionMatrix_plot(cm, labels, title):
     cm_text = [[str(y) for y in x] for x in cm]
     # set up figure
     fig = ff.create_annotated_heatmap(cm, x=labels, y=labels, annotation_text=cm_text, colorscale='Viridis')
 
     # add title
-    fig.update_layout(title_text=f"<i><b>{tittle}</b></i>")
+    fig.update_layout(title_text=f"<i><b>{title}</b></i>")
 
     # add custom xaxis title
     fig.add_annotation(dict(font=dict(color="black", size=14),
@@ -55,7 +55,7 @@ def ConfusionMatrix_plot(cm, labels, tittle):
     fig['data'][0]['showscale'] = True
     fig.show()
 
-def AUROC_curve(model, y, y_scores):
+def AUROC_curve(model, y, y_scores, title):
     # One hot encode the labels in order to plot them
     y_onehot = pd.get_dummies(y, columns=model.classes_)
 
@@ -78,6 +78,7 @@ def AUROC_curve(model, y, y_scores):
         fig.add_trace(go.Scatter(x=fpr, y=tpr, name=name, mode='lines'))
 
     fig.update_layout(
+        title=title,
         xaxis_title='False Positive Rate',
         yaxis_title='True Positive Rate',
         yaxis=dict(scaleanchor="x", scaleratio=1),
@@ -136,18 +137,22 @@ clf = StackingClassifier(
 
 ### Before Feature selection #########
 
-# clf.fit(x_train,y_train)
+clf.fit(x_train,y_train)
 
-# y_pred = clf.predict(x_test)
-# f1 = f1_score(y_true=y_test,y_pred=y_pred,average="macro")
-# print("Accuracy for Train data before feature selection")
-# print(f"Score: {round(f1, 3) * 100}%")
-#
-# ### Accuracy on original Test Data ###
-# y_pred = clf.predict(xTest)
-# f2 = f1_score(y_true=yTest,y_pred=y_pred,average="macro")
-# print("Accuracy for Original Test data before feature selection")
-# print(f"Score: {round(f2, 3) * 100}%")
+y_pred = clf.predict(x_test)
+f1 = f1_score(y_true=y_test,y_pred=y_pred,average="macro")
+print("Accuracy for Train data before feature selection")
+print(f"Score: {round(f1, 3) * 100}%")
+y_scores = clf.predict_proba(x_test)
+AUROC_curve(clf, y_test, y_scores, title = 'AUROC Curve for Training Data')
+
+### Accuracy on original Test Data ###
+y_pred = clf.predict(xTest)
+f2 = f1_score(y_true=yTest,y_pred=y_pred,average="macro")
+print("Accuracy for Original Test data before feature selection")
+print(f"Score: {round(f2, 3) * 100}%")
+y_scores = clf.predict_proba(xTest)
+AUROC_curve(clf, yTest, y_scores, title = 'AUROC Curve for Original Test Data')
 
 ### After Feature selection #########
 
@@ -166,8 +171,9 @@ f1 = f1_score(y_true=y_test,y_pred=y_pred,average="macro")
 cm = confusion_matrix(y_true=y_test,y_pred=y_pred, labels=['LAYING', 'SITTING', 'STANDING', 'WALKING', 'WALKING_DOWNSTAIRS', 'WALKING_UPSTAIRS'])
 print("Accuracy for Train data after feature selection")
 print(f"Score: {round(f1, 3) * 100}%")
-
-ConfusionMatrix_plot(cm, labels, tittle = "Confusion Matrix (Training)")    # Confusion matrix for training data
+ConfusionMatrix_plot(cm, labels, title = "Confusion Matrix (Training)")    # Confusion matrix for training data
+y_scores = clf.predict_proba(x_test)
+AUROC_curve(clf, y_test, y_scores, title = 'AUROC Curve for Training Data (After Feature Selection)')
 
 
 y_pred = clf.predict(xTest1)
@@ -175,11 +181,26 @@ f2 = f1_score(y_true=yTest,y_pred=y_pred,average="macro")
 cm = confusion_matrix(y_true=yTest,y_pred=y_pred, labels=['LAYING', 'SITTING', 'STANDING', 'WALKING', 'WALKING_DOWNSTAIRS', 'WALKING_UPSTAIRS'])
 print("Accuracy for Original Test data after feature selection")
 print(f"Score: {round(f2, 3) * 100}%")
-ConfusionMatrix_plot(cm, labels, tittle = "Confusion Matrix (Testing)")    # Confusion matrix for original test data
-
-
+ConfusionMatrix_plot(cm, labels, title = "Confusion Matrix (Testing)")    # Confusion matrix for original test data
 # AUC on original test data
 y_scores = clf.predict_proba(xTest1)
-AUROC_curve(clf, yTest, y_scores)
+AUROC_curve(clf, yTest, y_scores, title = 'AUROC Curve for Original Test Data (After Feature Selection)')
 
 ### Rather than removing Features we can use the reduced features using Advanced Dimensionality Reduction Techniques
+trans = umap.UMAP(n_neighbors=5, n_components=5 ,random_state=42).fit(x_train)
+clf.fit(trans.embedding_,y_train)
+test_embedding = trans.transform(x_test)
+y_pred = clf.predict(test_embedding)
+f1 = f1_score(y_true=y_test,y_pred=y_pred,average="macro")
+print(f"Score: {round(f1, 3) * 100}%")
+y_scores = clf.predict_proba(test_embedding)
+AUROC_curve(clf, y_test, y_scores, title = 'AUROC Curve for Transformed UMAP Training Data')
+
+# UMAP on original test data
+
+test_embedding = trans.transform(xTest1)
+y_pred = clf.predict(test_embedding)
+f1 = f1_score(y_true=yTest,y_pred=y_pred,average="macro")
+print(f"Score: {round(f1, 3) * 100}%")
+y_scores = clf.predict_proba(test_embedding)
+AUROC_curve(clf, yTest, y_scores, title = 'AUROC Curve for Transformed UMAP Test Data (Original Test Dataset)')

@@ -1,21 +1,18 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.graph_objects as go
 import plotly.express as px
 import plotly.figure_factory as ff
 import plotly.io as pio
 pio.renderers.default='browser'
-# import tensorflow as tf
-import statsmodels as sm
-from sklearn.feature_selection import SelectKBest, f_regression, f_classif
 
 
 train = pd.read_csv("Human Activity Recognition with Smartphone/train.csv")
 test = pd.read_csv("Human Activity Recognition with Smartphone/test.csv")
 
 print(train.isna().sum())    ## Checking for null values
+
+train.describe()            ## Descriptive stats
+test.describe()
 
 df1 = train['Activity'].groupby(train['Activity']).count()
 labels = train['Activity'].groupby(train['Activity']).count().index.to_list()
@@ -35,7 +32,7 @@ fig2.update_layout(
 # Data is fairly balanced
 
 fig3 = px.histogram(train, x='subject', color="Activity", barmode='group')
-fig3.update_layout(
+fig3.update_layout(title_text="Countplot",
     xaxis = dict(
         tickmode = 'linear'
     )
@@ -93,37 +90,18 @@ def plot3d (activity):
                        margin=dict(l=65, r=50, b=65, t=90))
     fig7.show()
 
-# plot3d(laying)
-# plot3d(sitting)
-# plot3d(standing)
-# plot3d(walking)
-# plot3d(walking_upstairs)
-# plot3d(walking_downstairs)
-
-
-
-#Correlation between Variables .
-# z = sitting.corr()
-# x = sitting.columns
-# y = sitting.columns
-# colorscale = [[0, 'navy'], [1, 'plum']]
-# font_colors = ['white', 'black']
-# fig8 = ff.create_annotated_heatmap(z, colorscale=colorscale, font_colors=font_colors)
-
-# plt.subplots(figsize = (10,6))
-# sns.heatmap(z, annot=True, cmap=sns.cubehelix_palette(as_cmap=True))
-# print(plt.show())
-# col = train.columns
-# x_train = train.iloc[:,:]
-# y_train = train.iloc[:,-1]
-# x_train.drop(['Activity'], axis=1)
-
-# x = train.drop(['Activity'],axis=1)
-# y = train['Activity']
-
-# y_train = pd.Series(y_train).astype('category')
-# y_train = y_train.cat.codes
-
+plot3d(laying)
+plot3d(sitting)
+plot3d(standing)
+plot3d(walking)
+plot3d(walking_upstairs)
+plot3d(walking_downstairs)
+fig1.show()
+fig2.show()
+fig3.show()
+fig4.show()
+fig5.show()
+fig6.show()
 ############## all PDF's for showing moving and stationary activities (seaborn) ######
 
 # facetgrid = sns.FacetGrid(train, hue='Activity', size=6,aspect=2)
