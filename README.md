@@ -2,12 +2,12 @@
 
 ## About the DATASET ...
 
-#### Human Activity Recognition Using Smartphones Dataset (Version 1.0)
+### Human Activity Recognition Using Smartphones Dataset (Version 1.0)
 The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data. 
 
 The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain. See 'features_info.txt' for more details. 
 
-##### For each record it is provided:
+#### For each record it is provided:
 ==================================
 - Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration.
 - Triaxial Angular velocity from the gyroscope. 
@@ -15,7 +15,7 @@ The sensor signals (accelerometer and gyroscope) were pre-processed by applying 
 - Its activity label. 
 - An identifier of the subject who carried out the experiment.
 
-##### About Features:
+#### About Features:
 ==================
 The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. 
 
@@ -79,7 +79,7 @@ tBodyGyroJerkMean
 
 The complete list of variables of each feature vector is available in 'features.txt'
 
-##### Dataset License:
+#### Dataset License:
 ===================
 Use of this dataset in publications must be acknowledged by referencing the following publication [1] 
 
@@ -87,7 +87,7 @@ Use of this dataset in publications must be acknowledged by referencing the foll
 
 This dataset is distributed AS-IS and no responsibility implied or explicit can be addressed to the authors or their institutions for its use or misuse. Any commercial use is prohibited.
 
-##### Other Related Publications:
+#### Other Related Publications:
 ==============================
 [2] Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra, Jorge L. Reyes-Ortiz.  Energy Efficient Smartphone-Based Activity Recognition using Fixed-Point Arithmetic. Journal of Universal Computer Science. Special Issue in Ambient Assisted Living: Home Care.   Volume 19, Issue 9. May 2013
 
@@ -101,7 +101,29 @@ Jorge L. Reyes-Ortiz, Alessandro Ghio, Luca Oneto, Davide Anguita and Xavier Par
 
 ## Exploratory Data Analysis
 
+#### Problem Framework
+
+30 subjects(volunteers) data is randomly split to 70%(21) test and 30%(7) train data.
+Each datapoint corresponds one of the 6 Activities.
+1. Walking
+2. WalkingUpstairs
+3. WalkingDownstairs
+4. Standing
+5. Sitting
+6. Lying.
+
+#### Problem Statement
+Given a new datapoint we have to predict the Activity
+
+#### Data Cleaning
+There is no Duplicate Values in train and test dataset
 There is no missing values in this dataset.
 Train & Test data is almost balanced.
 
 ![Train Dataset Distribution](/Visualization/train_dist.png)
+![Test Dataset Distribution](/Visualization/test_dist.png)
+
+##### Data Provided by each subject
+
+![Countplot (Training set)](/Visualization/countplot.png)
+
