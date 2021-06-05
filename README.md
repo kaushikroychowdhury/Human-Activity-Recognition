@@ -213,3 +213,135 @@ clf = StackingClassifier(
     final_estimator=GradientBoostingClassifier()
 )
 ```
+
+#### Model Performance: (Observations)
+
+![AUROC Curve Training](/Visualization/trainAUC.png)
+![AUROC Curve Testing](/Visualization/testAUC.png)
+
+We got very good Accuracy in multilabel classification by stacking the classifiers.
+
+1. Accuracy for Train data before feature selection
+Score: 98.9%
+2. Accuracy for Original Test data before feature selection
+Score: 95.6%
+
+## Feature Selection
+
+There are 561 features, I experimented with most important features and also used Advanced Dimensionality Reduction (**UMAP, T-SNE, PCA**)
+
+I used Random-Forest Classifier as the model to select important Features .
+
+```python
+import pandas as pd
+from sklearn.feature_selection import SelectFromModel
+from sklearn.ensemble import RandomForestClassifier
+
+
+def featureSelection():
+    train = pd.read_csv("Human Activity Recognition with Smartphone/train.csv")
+    x = train.drop(['subject', 'Activity'], axis=1)
+    y = train['Activity']
+
+    selectFeature = SelectFromModel(RandomForestClassifier())
+    selectFeature.fit(x, y)
+
+    features1 = x.columns[(selectFeature.get_support())]
+    return features1
+```
+
+###### Observations
+
+**For 134 features**
+Accuracy for Train data after feature selection
+Score: 99.3%
+Accuracy for Original Test data after feature selection
+Score: 85.1%
+
+**For 122 features**
+Accuracy for Train data after feature selection
+Score: 99.0%
+Accuracy for Original Test data after feature selection
+Score: 88.0%
+
+**For 124 features**
+Accuracy for Train data after feature selection
+Score: 99.1%
+Accuracy for Original Test data after feature selection
+Score: 88.7%
+
+**For 133 features**
+Accuracy for Train data after feature selection
+Score: 98.9%
+Accuracy for Original Test data after feature selection
+Score: 85.1%
+
+###### Performance metric
+
+![Confusion Matrix Training](/Visualization/cmtraining.png)
+![Confusion Matrix Testing](/Visualization/cmtesting.png)
+![AUROC Curve Training](/Visualization/trainAUC_AFS.png)
+![AUROC Curve Testing](/Visualization/testAUC_AFS.png)
+
+## Dimensionality Reduction for selecting features
+The main idea behind redusing dimensions is to reduce all 561 features to n number of components, so that every feature could have their importance in model, rather than only using the selected features.
+
+And also the model will train fast if we reduce the features.
+I have used 3 Dimensionality Reduction Algorithm:
+
+1. **PCA** (Principal Component Analysis)
+2. **T-SNE** (t-Distributed Stochastic Neighbor Embedding)
+3. **UMAP** (Uniform Manifold Approximation and Projection)
+
+#### Visualizing algorithms for this dataset:
+
+![PCA](/Visualization/PCA.png)
+![T-SNE](/Visualization/T-SNE.png)
+![UMAP](/Visualization/UMAP(Supervised).png)
+
+UMAP performs better than PCA and T-SNE for this dataset, so we can transform our dataset according to the input of UMAP model. And then train the **Stacked Classifier** with the transformed data.
+
+```python
+import umap.umap_ as umap
+trans = umap.UMAP(n_neighbors=5, n_components=5 ,random_state=42).fit(x_train)
+clf.fit(trans.embedding_,y_train)
+test_embedding = trans.transform(x_test)
+y_pred = clf.predict(test_embedding)
+f1 = f1_score(y_true=y_test,y_pred=y_pred,average="macro")
+print(f"Score: {round(f1, 3) * 100}%")
+```
+
+###### Observation:
+
+umap training   Score: 92.0%
+umap test       Score: 85.9%
+
+![UMAP train AUROC](/Visualization/trainAUC_UMAP.png)
+![UMAP test AUROC](/Visualization/testAUC_UMAP.png)
+
+
+# Summary
+
+Score: 95.7% 	 Classifier: KNeighborsClassifier
+Score: 98.1% 	 Classifier: SVC
+Score: 94.1% 	 Classifier: DecisionTreeClassifier
+Score: 98.1% 	 Classifier: RandomForestClassifier
+Score: 72.7% 	 Classifier: GaussianNB
+Score: 98.4% 	 Classifier: RidgeClassifier
+Score: 98.9% 	 Classifier: LogisticRegression
+
+
+## Stacked Classifier
+Accuracy for Train data before feature selection
+Score: 98.9%
+Accuracy for Original Test data before feature selection
+Score: 95.6%
+Accuracy for Train data after feature selection
+Score: 98.9%
+Accuracy for Original Test data after feature selection
+Score: 85.1%
+
+umap training   Score: 92.0%
+umap test       Score: 85.9%
+
+__**We get best test accuracy of 95.6% for the Stacked Classifier model using all 561 features.**__
