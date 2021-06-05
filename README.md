@@ -253,28 +253,32 @@ def featureSelection():
 ###### Observations
 
 **For 134 features**
+
 Accuracy for Train data after feature selection
-Score: 99.3%
+Score: 99.3%. 
 Accuracy for Original Test data after feature selection
-Score: 85.1%
+Score: 85.1%.
 
 **For 122 features**
+
 Accuracy for Train data after feature selection
-Score: 99.0%
+Score: 99.0%. 
 Accuracy for Original Test data after feature selection
-Score: 88.0%
+Score: 88.0%.
 
 **For 124 features**
+
 Accuracy for Train data after feature selection
-Score: 99.1%
+Score: 99.1%. 
 Accuracy for Original Test data after feature selection
-Score: 88.7%
+Score: 88.7%.
 
 **For 133 features**
+
 Accuracy for Train data after feature selection
-Score: 98.9%
+Score: 98.9%. 
 Accuracy for Original Test data after feature selection
-Score: 85.1%
+Score: 85.1%.
 
 ###### Performance metric
 
