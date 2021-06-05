@@ -127,3 +127,89 @@ Train & Test data is almost balanced.
 
 ![Countplot (Training set)](/Visualization/countplot.png)
 
+#### 1. Featuring Engineering from Domain Knowledge
+#### Static and Dynamic Activities
+
+In static activities (sit, stand, lie down) motion information will not be very useful.
+In the dynamic activities (Walking, WalkingUpstairs,WalkingDownstairs) motion info will be significant.
+
+#### 2. Stationary and Moving activities are completely different
+
+![Activities](/Visualization/staticvsdynamic.png)
+As we can clearly see the difference between stationary activities and Moving Activities as per above pdf distribution.
+
+##### Magnitude of Accelaration can also separate Activities
+![Activities](/Visualization/boxtbody.png)
+![Activities](/Visualization/boxfbody.png)
+
+###### Observations:
+
+1. If tAccMean is < -0.8 then the Activities are either Standing or Sitting or Laying.
+2. If tAccMean is > -0.6 then the Activities are either Walking or WalkingDownstairs or WalkingUpstairs.
+3. If tAccMean > 0.0 then the Activity is WalkingDownstairs.
+4. We can classify 75% the Acitivity labels with some errors.
+
+##### Position of GravityAccelerationComponants
+
+To understand variation of Gravity Accelaration Components, 3D plot will be easier to interpret as every Smartphone sensors works in 3-Dimensional Plane.
+
+![Sensor Axis](/Visualization/axis_device.png)
+source : [Sensor Overview](https://developer.android.com/guide/topics/sensors/sensors_overview#java)
+
+###### Laying
+![Laying 3D Plot](/Visualization/laying3d.png)
+###### Sitting
+![Sitting 3D Plot](/Visualization/sitting3d.png)
+###### Standing
+![Standing 3D Plot](/Visualization/standing3d.png)
+###### Walking
+![Walking 3D Plot](/Visualization/walking3d.png)
+###### Walking Downstairs
+![Walking Downstairs 3D Plot](/Visualization/walkingdownstairs3d.png)
+###### Walking Upstairs
+![Walking Upstairs 3D Plot](/Visualization/walkingupstairs3d.png)
+
+###### Observations:
+
+1. If angleX,gravityMean > 0 then Activity is Laying.
+2. We can classify all datapoints belonging to Laying activity with just a single if else statement.
+
+
+## Model Selection
+
+In model selection phase, I have train the data into multiple classifier Algorithms. Classifier algorithm are as follows :
+1. KNeighborsClassifier
+2. SVC
+3. Decision-Tree Classifier
+4. Random-Forest Classifier
+5. GaussianNB
+6. Ridge Classifier
+7. Logistic Regression
+
+###### Observation
+
+Score: 95.7% 	 Classifier: KNeighborsClassifier
+Score: 98.1% 	 Classifier: SVC
+Score: 94.1% 	 Classifier: DecisionTreeClassifier
+Score: 98.1% 	 Classifier: RandomForestClassifier
+Score: 72.7% 	 Classifier: GaussianNB
+Score: 98.4% 	 Classifier: RidgeClassifier
+Score: 98.9% 	 Classifier: LogisticRegression
+
+
+Next I used **Stacking Classifier** because, Stacked generalization consists in stacking the output of individual estimator and use a classifier to compute the final prediction. Stacking allows to use the strength of each individual estimator by using their output as input of a final estimator.
+
+```python
+estimators = [
+        ('RFC' ,RandomForestClassifier(n_estimators=500, random_state = 42)),
+        ('KNC', KNeighborsClassifier(5)),
+        ('DTC', DecisionTreeClassifier()),
+        ('SVC', SVC(kernel="rbf")),
+        ('RC',  RidgeClassifier()),
+]
+
+clf = StackingClassifier(
+    estimators=estimators,
+    final_estimator=GradientBoostingClassifier()
+)
+```
