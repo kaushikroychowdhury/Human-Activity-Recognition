@@ -194,7 +194,7 @@ Score: 94.1% 	 Classifier: DecisionTreeClassifier\
 Score: 98.1% 	 Classifier: RandomForestClassifier\
 Score: 72.7% 	 Classifier: GaussianNB\
 Score: 98.4% 	 Classifier: RidgeClassifier\
-Score: 98.9% 	 Classifier: LogisticRegression\
+Score: 98.9% 	 Classifier: LogisticRegression
 
 
 Next I used **Stacking Classifier** because, Stacked generalization consists in stacking the output of individual estimator and use a classifier to compute the final prediction. Stacking allows to use the strength of each individual estimator by using their output as input of a final estimator.
@@ -222,9 +222,9 @@ clf = StackingClassifier(
 We got very good Accuracy in multilabel classification by stacking the classifiers.
 
 1. Accuracy for Train data before feature selection\
-Score: 98.9%\
+Score: 98.9%
 2. Accuracy for Original Test data before feature selection\
-Score: 95.6%\
+Score: 95.6%
 
 ## Feature Selection
 
@@ -256,25 +256,25 @@ def featureSelection():
 Accuracy for Train data after feature selection\
 Score: 99.3%\
 Accuracy for Original Test data after feature selection\
-Score: 85.1%\
+Score: 85.1%
 
 **For 122 features**\
 Accuracy for Train data after feature selection\
 Score: 99.0%\
 Accuracy for Original Test data after feature selection\
-Score: 88.0%\
+Score: 88.0%
 
 **For 124 features**\
 Accuracy for Train data after feature selection\
 Score: 99.1%\
 Accuracy for Original Test data after feature selection\
-Score: 88.7%\
+Score: 88.7%
 
 **For 133 features**\
 Accuracy for Train data after feature selection\
 Score: 98.9%\
 Accuracy for Original Test data after feature selection\
-Score: 85.1%\
+Score: 85.1%
 
 
 ###### Performance metric
@@ -317,7 +317,7 @@ print(f"Score: {round(f1, 3) * 100}%")
 ###### Observation:
 
 umap training   Score: 92.0%\
-umap test       Score: 85.9%\
+umap test       Score: 85.9%
 
 ![UMAP train AUROC](/Visualization/trainAUC_UMAP.png)
 ![UMAP test AUROC](/Visualization/testAUC_UMAP.png)
@@ -331,7 +331,7 @@ Score: 94.1% 	 Classifier: DecisionTreeClassifier\
 Score: 98.1% 	 Classifier: RandomForestClassifier\
 Score: 72.7% 	 Classifier: GaussianNB\
 Score: 98.4% 	 Classifier: RidgeClassifier\
-Score: 98.9% 	 Classifier: LogisticRegression\
+Score: 98.9% 	 Classifier: LogisticRegression
 
 
 ## Stacked Classifier
@@ -342,9 +342,9 @@ Score: 95.6%\
 Accuracy for Train data after feature selection\
 Score: 98.9%\
 Accuracy for Original Test data after feature selection\
-Score: 85.1%\
+Score: 85.1%
 
 umap training   Score: 92.0%\
-umap test       Score: 85.9%\
+umap test       Score: 85.9%
 
 __**We get best test accuracy of 95.6% for the Stacked Classifier model using all 561 features.**__
