@@ -188,13 +188,13 @@ In model selection phase, I have train the data into multiple classifier Algorit
 
 ###### Observation
 
-Score: 95.7% 	 Classifier: KNeighborsClassifier
-Score: 98.1% 	 Classifier: SVC
-Score: 94.1% 	 Classifier: DecisionTreeClassifier
-Score: 98.1% 	 Classifier: RandomForestClassifier
-Score: 72.7% 	 Classifier: GaussianNB
-Score: 98.4% 	 Classifier: RidgeClassifier
-Score: 98.9% 	 Classifier: LogisticRegression
+Score: 95.7% 	 Classifier: KNeighborsClassifier\
+Score: 98.1% 	 Classifier: SVC\
+Score: 94.1% 	 Classifier: DecisionTreeClassifier\
+Score: 98.1% 	 Classifier: RandomForestClassifier\
+Score: 72.7% 	 Classifier: GaussianNB\
+Score: 98.4% 	 Classifier: RidgeClassifier\
+Score: 98.9% 	 Classifier: LogisticRegression\
 
 
 Next I used **Stacking Classifier** because, Stacked generalization consists in stacking the output of individual estimator and use a classifier to compute the final prediction. Stacking allows to use the strength of each individual estimator by using their output as input of a final estimator.
@@ -221,10 +221,10 @@ clf = StackingClassifier(
 
 We got very good Accuracy in multilabel classification by stacking the classifiers.
 
-1. Accuracy for Train data before feature selection
-Score: 98.9%
-2. Accuracy for Original Test data before feature selection
-Score: 95.6%
+1. Accuracy for Train data before feature selection\
+Score: 98.9%\
+2. Accuracy for Original Test data before feature selection\
+Score: 95.6%\
 
 ## Feature Selection
 
@@ -253,28 +253,28 @@ def featureSelection():
 ###### Observations
 
 **For 134 features**
-Accuracy for Train data after feature selection
-Score: 99.3%
-Accuracy for Original Test data after feature selection
-Score: 85.1%
+Accuracy for Train data after feature selection\
+Score: 99.3%\
+Accuracy for Original Test data after feature selection\
+Score: 85.1%\
 
-**For 122 features**
-Accuracy for Train data after feature selection
-Score: 99.0%
-Accuracy for Original Test data after feature selection
-Score: 88.0%
+**For 122 features**\
+Accuracy for Train data after feature selection\
+Score: 99.0%\
+Accuracy for Original Test data after feature selection\
+Score: 88.0%\
 
-**For 124 features**
-Accuracy for Train data after feature selection
-Score: 99.1%
-Accuracy for Original Test data after feature selection
-Score: 88.7%
+**For 124 features**\
+Accuracy for Train data after feature selection\
+Score: 99.1%\
+Accuracy for Original Test data after feature selection\
+Score: 88.7%\
 
-**For 133 features**
-Accuracy for Train data after feature selection
-Score: 98.9%
-Accuracy for Original Test data after feature selection
-Score: 85.1%
+**For 133 features**\
+Accuracy for Train data after feature selection\
+Score: 98.9%\
+Accuracy for Original Test data after feature selection\
+Score: 85.1%\
 
 ###### Performance metric
 
@@ -294,9 +294,11 @@ I have used 3 Dimensionality Reduction Algorithm:
 3. **UMAP** (Uniform Manifold Approximation and Projection)
 
 #### Visualizing algorithms for this dataset:
-
+## PCA
 ![PCA](/Visualization/PCA.png)
+## T-SNE
 ![T-SNE](/Visualization/T-SNE.png)
+## UMAP
 ![UMAP](/Visualization/UMAP(Supervised).png)
 
 UMAP performs better than PCA and T-SNE for this dataset, so we can transform our dataset according to the input of UMAP model. And then train the **Stacked Classifier** with the transformed data.
@@ -313,8 +315,8 @@ print(f"Score: {round(f1, 3) * 100}%")
 
 ###### Observation:
 
-umap training   Score: 92.0%
-umap test       Score: 85.9%
+umap training   Score: 92.0%\
+umap test       Score: 85.9%\
 
 ![UMAP train AUROC](/Visualization/trainAUC_UMAP.png)
 ![UMAP test AUROC](/Visualization/testAUC_UMAP.png)
@@ -322,26 +324,26 @@ umap test       Score: 85.9%
 
 # Summary
 
-Score: 95.7% 	 Classifier: KNeighborsClassifier
-Score: 98.1% 	 Classifier: SVC
-Score: 94.1% 	 Classifier: DecisionTreeClassifier
-Score: 98.1% 	 Classifier: RandomForestClassifier
-Score: 72.7% 	 Classifier: GaussianNB
-Score: 98.4% 	 Classifier: RidgeClassifier
-Score: 98.9% 	 Classifier: LogisticRegression
+Score: 95.7% 	 Classifier: KNeighborsClassifier\
+Score: 98.1% 	 Classifier: SVC\
+Score: 94.1% 	 Classifier: DecisionTreeClassifier\
+Score: 98.1% 	 Classifier: RandomForestClassifier\
+Score: 72.7% 	 Classifier: GaussianNB\
+Score: 98.4% 	 Classifier: RidgeClassifier\
+Score: 98.9% 	 Classifier: LogisticRegression\
 
 
 ## Stacked Classifier
-Accuracy for Train data before feature selection
-Score: 98.9%
-Accuracy for Original Test data before feature selection
-Score: 95.6%
-Accuracy for Train data after feature selection
-Score: 98.9%
-Accuracy for Original Test data after feature selection
-Score: 85.1%
+Accuracy for Train data before feature selection\
+Score: 98.9%\
+Accuracy for Original Test data before feature selection\
+Score: 95.6%\
+Accuracy for Train data after feature selection\
+Score: 98.9%\
+Accuracy for Original Test data after feature selection\
+Score: 85.1%\
 
-umap training   Score: 92.0%
-umap test       Score: 85.9%
+umap training   Score: 92.0%\
+umap test       Score: 85.9%\
 
 __**We get best test accuracy of 95.6% for the Stacked Classifier model using all 561 features.**__
