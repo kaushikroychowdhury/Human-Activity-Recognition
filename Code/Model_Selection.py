@@ -22,6 +22,19 @@ warnings.filterwarnings("ignore")
 ### Functions used ..
 
 def ConfusionMatrix_plot(cm, labels, title):
+
+    """
+    ConfusionMatrix_plot function plots the Confusion Matrix with labels.
+
+    :param cm: Confusion Matrix.
+    :param labels: Labels for the Dataset.
+    :param tittle: tittle of the plot.
+
+    Returns
+    -----------------------
+    2D figure of Confusion Matrix.
+    """
+
     cm_text = [[str(y) for y in x] for x in cm]
     # set up figure
     fig = ff.create_annotated_heatmap(cm, x=labels, y=labels, annotation_text=cm_text, colorscale='Viridis')
@@ -56,6 +69,21 @@ def ConfusionMatrix_plot(cm, labels, title):
     fig.show()
 
 def AUROC_curve(model, y, y_scores, title):
+
+    """
+    plots the AUROC (Area Under Reciever Operating Characteristics) Curve which is used
+    for showing the performance of classification model at all classification thresholds.
+
+    :param model: model used for classification.
+    :param y: Actual labels.
+    :param y_scores: Predicted Labels.
+    :param tittle: tittle of the plot.
+
+    Returns
+    ---------------------
+    AUROC curve figure.
+    """
+
     # One hot encode the labels in order to plot them
     y_onehot = pd.get_dummies(y, columns=model.classes_)
 
@@ -88,6 +116,19 @@ def AUROC_curve(model, y, y_scores, title):
     fig.show()
 
 def f_score(x_train, x_test, y_train, y_test, classifiers):
+
+    """
+    f_score computes the f1-Score of the all models.
+
+    :param x_train: training features.
+    :param x_test: testing features.
+    :param y_train: training labels.
+    :param y_test: testing labels.
+    :param classifier: list of classification algorithm
+
+    Return 
+    """
+
     for clf in classifiers:
 
         clf.fit(x_train,y_train)
@@ -95,6 +136,9 @@ def f_score(x_train, x_test, y_train, y_test, classifiers):
         f = f1_score(y_true=y_test,y_pred=y_pred,average="macro")
 
         print(f"Score: {round(f,3)*100}% \t Classifier: {clf.__class__.__name__}")
+
+
+# Splitting the Dataset into Train-Test
 
 train = pd.read_csv("Human Activity Recognition with Smartphone/train.csv")
 test = pd.read_csv("Human Activity Recognition with Smartphone/test.csv")
@@ -110,6 +154,7 @@ xTest = StandardScaler().fit_transform(xTest)
 yTest = test['Activity']
 labels = ['LAYING', 'SITTING', 'STANDING', 'WALKING', 'WALKING_DOWNSTAIRS', 'WALKING_UPSTAIRS']
 
+# Different Classifiers to find the best model.
 classifiers = [
     KNeighborsClassifier(5),
     SVC(kernel="rbf"),
@@ -134,6 +179,8 @@ clf = StackingClassifier(
     estimators=estimators,
     final_estimator=GradientBoostingClassifier()
 )
+
+# Experimentation
 
 ### Before Feature selection #########
 
@@ -187,6 +234,7 @@ y_scores = clf.predict_proba(xTest1)
 AUROC_curve(clf, yTest, y_scores, title = 'AUROC Curve for Original Test Data (After Feature Selection)')
 
 ### Rather than removing Features we can use the reduced features using Advanced Dimensionality Reduction Techniques
+
 trans = umap.UMAP(n_neighbors=5, n_components=5 ,random_state=42).fit(x_train)
 clf.fit(trans.embedding_,y_train)
 test_embedding = trans.transform(x_test)

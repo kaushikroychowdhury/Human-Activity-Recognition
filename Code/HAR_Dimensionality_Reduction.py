@@ -34,6 +34,14 @@ x = test.drop(['subject', 'Activity'],axis=1)
 y = test['code']
 
 def plot_2d(component1, component2):
+
+    """
+    plot 2 different Principal Components in 2D space.
+
+    :param component1: Principal Component 1
+    :param component2: Principal Component 2
+    """
+    
     fig = go.Figure(data=go.Scatter(
         x=component1,
         y=component2,
@@ -53,6 +61,14 @@ def plot_2d(component1, component2):
 
 
 def plot_3d(component1, component2, component3):
+
+    """
+    plot 2 different Principal Components in 2D space.
+
+    :param component1: Principal Component 1
+    :param component2: Principal Component 2
+    """
+
     fig = go.Figure(data=[go.Scatter3d(
         x=component1,
         y=component2,
@@ -89,6 +105,7 @@ fig1 = px.area(
 # plt.ylabel('cumulative explained variance')           ## Matplotlib
 
 ###################################################### PCA ##################   Visualization of data #################
+
 pca = PCA(n_components=3)
 principalComponents = pca.fit_transform(x)
 principal = pd.DataFrame(data = principalComponents
@@ -99,6 +116,7 @@ plot_3d(principalComponents[:, 0],principalComponents[:, 1],principalComponents[
 
 
 # ################################################### T-SNE ############################################################
+
 pca_50 = PCA(n_components=50)
 pca_result_50 = pca_50.fit_transform(x)
 tsne = TSNE(random_state = 42, n_components=3,verbose=0, perplexity=40, n_iter=400).fit_transform(pca_result_50)
@@ -128,7 +146,3 @@ embedding = umap.UMAP(n_neighbors=20).fit_transform(x, y=y)
 e = time.time()
 print(f"time consumed: {round(e-s,3)}")
 plot_2d(embedding[:, 0],embedding[:, 1])
-
-
-
-

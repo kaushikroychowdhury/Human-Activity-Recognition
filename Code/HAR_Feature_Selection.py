@@ -6,6 +6,15 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 def featureSelection():
+
+    """
+    Select best features from the dataset using Random Forest Classification Algorithm.
+
+    Returns
+    --------------
+    features1: Dataframe Containing best features.
+    """
+
     train = pd.read_csv("Human Activity Recognition with Smartphone/train.csv")
     x = train.drop(['subject', 'Activity'], axis=1)
     y = train['Activity']
